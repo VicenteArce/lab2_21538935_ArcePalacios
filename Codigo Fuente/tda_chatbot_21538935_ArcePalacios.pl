@@ -1,4 +1,4 @@
-:- module(tda_chatbot_21538935_ArcePalacios, [chatbot/6, chatbot2/6, getChatbotIdChatbot/2, getNameChatbot/2, getWelcomeMessageChatbot/2, getStartFlowIdChatbot/2, getFlowsChatbot/2, chatbotAddFlow/3, getIdsFlows/2, addFlow/3]).
+:- module(tda_chatbot_21538935_ArcePalacios, [chatbot2/6, getChatbotIdChatbot/2, getNameChatbot/2, getWelcomeMessageChatbot/2, getStartFlowIdChatbot/2, getFlowsChatbot/2, getIdsFlows/2, addFlow/3]).
 
 :- use_module(tda_option_21538935_ArcePalacios).
 :- use_module(tda_flow_21538935_ArcePalacios).
@@ -6,12 +6,8 @@
 
 
 %-------------Constructores-----------
-% Meta primaria: chatbot/6
-% Metas secundarias: addFlow/3
-% Descripción: predicado que representa un chatbot, permite la verificación de que todos los flujos sean distintos
-% Dominio: ChatbotId X Name X WelcomeMessage X StartFlowId X Flows X Chatbot
-chatbot(ChatbotId, Name, WelcomeMessage, StartFlowId, Flows, [ChatbotId, Name, WelcomeMessage, StartFlowId, FlowOut]):-
-    addFlow(Flows,[], FlowOut).
+
+% Constructor del chatbot se encuentra en el Main RF5
 
 % Meta primaria: chatbot2/6
 % Metas secundarias: addFlow/3
@@ -55,38 +51,7 @@ getFlowsChatbot([_,_,_,_,Flows], Flows).
 
 %-----------Modificadores------
 
-% Meta Primaria: chatbotAddFlow/2
-% Metas secundarias: getIdFlow/2, getFlowsChatbot/2, getIdsFlows/2, member/2, getChatbotIdChatbot/2, getNameChatbot/2, getWelcomeMessageChatbot/2
-%					 getStartFlowIdChatbot/2, getFlowsChatbot/2, chatbot2/2
-% Descripcion: Predicado que permite consultar los Flows de un chatbot
-% Dominio: Chatbot X FLow X Chatbot
-
-% Caso 1: Si el id del flow no es parte de ningun flow ya agregado, entonces agrega el flow al chatbot
-chatbotAddFlow(ChatbotIn, Flow, ChatbotOut):-
-    getIdFlow(Flow, FlowId),
-    getFlowsChatbot(ChatbotIn, Flows),
-    getIdsFlows(Flows, IdsFlows),
-    \+ member(FlowId, IdsFlows),
-    getChatbotIdChatbot(ChatbotIn, ChatbotIdOut),
-    getNameChatbot(ChatbotIn, NameOut),
-    getWelcomeMessageChatbot(ChatbotIn, WelcomeMessageOut),
-    getStartFlowIdChatbot(ChatbotIn, StartFlowIdOut),
-    getFlowsChatbot(ChatbotIn, FlowsOut),
-    chatbot2(ChatbotIdOut, NameOut, WelcomeMessageOut, StartFlowIdOut, [Flow|FlowsOut], ChatbotOut).
-
-%Caso 2: Si el id del flow es parte de ningun flow ya agregado, entonces no lo agrega al flow del chatbot
-chatbotAddFlow(ChatbotIn, Flow, ChatbotOut):-
-    getIdFlow(Flow, FlowId),
-    getFlowsChatbot(ChatbotIn, Flows),
-    getIdsFlows(Flows, IdsFlows),
-    member(FlowId, IdsFlows),
-    getChatbotIdChatbot(ChatbotIn, ChatbotIdOut),
-    getNameChatbot(ChatbotIn, NameOut),
-    getWelcomeMessageChatbot(ChatbotIn, WelcomeMessageOut),
-    getStartFlowIdChatbot(ChatbotIn, StartFlowIdOut),
-    getFlowsChatbot(ChatbotIn, FlowsOut),
-    chatbot2(ChatbotIdOut, NameOut, WelcomeMessageOut, StartFlowIdOut, FlowsOut, ChatbotOut).
-
+% chatbotAddFlow se encuentra en el Main RF6
 
 %----------Otras Funciones--------
 % Metas Primarias: getIdsFlows/2

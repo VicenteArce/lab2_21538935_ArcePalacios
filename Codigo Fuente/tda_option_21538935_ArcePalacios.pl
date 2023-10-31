@@ -1,13 +1,8 @@
-:- module(tda_option_21538935_ArcePalacios, [option/6, getCodeOption/2, getMessageOption/2, getChatbotCodeLinkOption/2, getInitialFlowCodeLinkOption/2, getKeywordOption/2]).
+:- module(tda_option_21538935_ArcePalacios, [getCodeOption/2, getMessageOption/2, getChatbotCodeLinkOption/2, getInitialFlowCodeLinkOption/2, getKeywordOption/2, downcaseKeywords/3]).
 
+% El constructor option se encuentra en el Main RF2
 
-% Metas Primarias: option
-% Metas Secundarias: -
-% Descripcion: Predicado que representa a una opcion
-% Dominio: Code (Int)  X Message (String)  X ChatbotCodeLink (Int) X InitialFlowCodeLink (Int) X Keyword (lista de 0 o mas palabras claves) X Option
-option(Code, Message, ChatbotCodeLink, InitialFlowCodeLink, Keyword, [Code, Message, ChatbotCodeLink, InitialFlowCodeLink, Keyword]).
-
-
+%--------------------Selectores---------------
 % Metas Primarias: getCodeOption/2
 % Metas Secundarias: -
 % Descripcion: Predicado obtiene el codigo de una opcion
@@ -40,3 +35,11 @@ getInitialFlowCodeLinkOption([_,_,_,InitialFlowCodeLink|_], InitialFlowCodeLink)
 % Descripcion: Predicado que obtiene las palabras clave de una opcion
 % Dominio: Option X Keyword
 getKeywordOption([_,_,_,_,Keyword], Keyword).
+
+
+%---------Otras funciones----------
+downcaseKeywords([], Acc, Acc).
+downcaseKeywords([H|T], Acc, NextAcc):-
+    downcase_atom(H, Hatom),
+    atom_string(Hatom, Hmin), 
+    downcaseKeywords(T, [Hmin|Acc], NextAcc).
