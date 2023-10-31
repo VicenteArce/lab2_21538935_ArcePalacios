@@ -210,6 +210,7 @@ systemLogout(SystemIn, SystemOut):-
 
 
 %---------------------------------------RF12---------------------------------------
+<<<<<<< HEAD
 % Meta Primaria: systemTalkRec/3
 % Metas secundarias: isEmpty/1, atom_number/2, getPrimerElemento/2, recuperarElemento/3, getNameChatbot/2, getFlowsChatbot/2,getStartFlowIdChatbot/2,getNameMessageFlow/2, getOptionsFlow/2, getMessagesOptions/2, get_time/1, reverse/2,
 %                    append/3, concat_atom/2, agregarMensajeUsuario/4, getChatbotCodeLinkOption/2,getInitialFlowCodeLinkOption/2, downcase_atom/2, atom_string/2, system2/9
@@ -218,6 +219,8 @@ systemLogout(SystemIn, SystemOut):-
 % Dominio: System X Message X System
 
 
+=======
+>>>>>>> da7099cfb0b1df2ef28e3f54b94e14131f568b55
 
 %Caso0: No hay ningun usuario logueado, se construye el mismo sistema ingresado, tambien reinicia el ActualChatbotCodeLink y el ActualFlowCodeLink
 systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, _, _], _, SystemOut):-
@@ -308,11 +311,14 @@ systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUser
     
 
 %---------------------------------------RF13---------------------------------------
+<<<<<<< HEAD
 % Meta Primaria: systemSynthesis/3
 % Metas secundarias: getRegisterUsersSystem72, member/2, getHistorialCH/2, isEmpty/1, getPrimerElemento/2, getChatHistorySystem/2, recuperarElemento/3
 % Descripcion: Predicado que permite interactuar con el sistema, este soporta mensajes que contegan el numero de la opcion del numero o mensajes que sean parte de las palabras claves de la opciones disponibles,
 %              el sistema de salida contendra en el historial del usuario logueado, las conversaciones que se hayan tenido con el sistema.
 % Dominio: System X Message X System
+=======
+>>>>>>> da7099cfb0b1df2ef28e3f54b94e14131f568b55
 
 %Caso1: El usuario dado no esta registrado
 systemSynthesis(System, User, String):-
@@ -338,6 +344,7 @@ systemSynthesis(System, User, String):-
 
 %------------------------OTROS PREDICADOS-------------------
 
+<<<<<<< HEAD
 % Meta Primaria: getPrimerElemento/2
 % Metas secundarias: -
 % Descripcion: Obtiene el primer elemento de una lista
@@ -349,25 +356,36 @@ getPrimerElemento([E|_],E).
 % Metas secundarias: member/2
 % Descripcion: Predicado que permite obtener un Elemento de una lista relacionado a un string, es decir, si en una lista hay un elemento que contiene el mensaje "Hola", con este predicado se puede obtener todo el elemento que tiene el mensaje "Hola"
 % Dominio: Mensaje X Lista X Lista
+=======
+getPrimerElemento([E|_],E).
+    
+>>>>>>> da7099cfb0b1df2ef28e3f54b94e14131f568b55
 recuperarElementoPorString(Mensaje, [[C, M, CB, Init, Keywords]|_], [C, M, CB, Init, Keywords]):-
     member(Mensaje, Keywords).
 recuperarElementoPorString(Mensaje,[_|Resto], ElementoRecuperado):-
     recuperarElementoPorString(Mensaje, Resto, ElementoRecuperado).
+<<<<<<< HEAD
 
 
 % Meta Primaria: recuperarElemento/3
 % Metas secundarias: -
 % Descripcion: Predicado que permite recuperar una lista si contiene un elemento en su primera posicion
 % Dominio: Elemento X Lista X Lista
+=======
+    
+>>>>>>> da7099cfb0b1df2ef28e3f54b94e14131f568b55
 recuperarElemento(Elemento, [[Elemento|Resto]|_], [Elemento|Resto]) :- !.
 recuperarElemento(Elemento, [_|Resto], ElementoRecuperado) :-
     recuperarElemento(Elemento, Resto, ElementoRecuperado).
     
+<<<<<<< HEAD
 
 % Meta Primaria: getMessagesOptions/2
 % Metas Secundarias: -
 % Descripcion: Predicado que permite poner en una lista todas las opciones de un flujo en especifico
 % Dominio: Lista X Lista
+=======
+>>>>>>> da7099cfb0b1df2ef28e3f54b94e14131f568b55
 getMessagesOptions([], []).
 getMessagesOptions([[_,Message|_]|Resto],[Message, "\n" | ListaMensajes]) :-
     getMessagesOptions(Resto, ListaMensajes).
