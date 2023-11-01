@@ -1,8 +1,6 @@
-:- module(tda_chatHistory_21538935_ArcePalacios, [chatHistory/3, getUserCH/2, getHistorialCH/2, agregarMensajeUsuario/4]).
+%---------------------------------------TDA ChatHistory---------------------------------------
 
-
-<<<<<<< HEAD
-%---------------Constructor----------------
+%---------------------------------------Constructor---------------------------------------
 % Meta Primaria: chatHistory/3
 % Metas Secundarias: -
 % Descripcion: Predicado que permite representar un chatHistory
@@ -23,7 +21,7 @@ getUserCH([User,_], User).
 getHistorialCH([_,Historial], Historial).
 
 
-%---------Otros predicados---------------------
+%---------------------------------------Otros predicados---------------------------------------
 
 % Meta Primaria: agregarMensajeUsuario/4
 % Metas Secundarias: append/3, concat_atom/2
@@ -33,27 +31,9 @@ getHistorialCH([_,Historial], Historial).
 agregarMensajeUsuario([[Usuario, Lista] | RestoUsuarios], UsuarioAgregar, Mensaje, [[Usuario, [NuevaLista2]] | RestoUsuarios]) :-
     Usuario = UsuarioAgregar,         
     append(Lista, [Mensaje], NuevaLista), 
-=======
-chatHistory(User, Historial, [User, Historial]).
-
-getUserCH([User,_], User).
-
-getHistorialCH([_,Historial], Historial).
-
-
-
-% Predicado para agregar un mensaje en la segunda lista de la sublista que contiene a un usuario dado
-agregarMensajeUsuario([[Usuario, Lista] | RestoUsuarios], UsuarioAgregar, Mensaje, [[Usuario, [NuevaLista2]] | RestoUsuarios]) :-
-    Usuario = UsuarioAgregar,          % Comprobamos si el usuario coincide
-    append(Lista, [Mensaje], NuevaLista), % Agregamos el mensaje a la lista existente
->>>>>>> da7099cfb0b1df2ef28e3f54b94e14131f568b55
 	concat_atom(NuevaLista, NuevaLista2).
 agregarMensajeUsuario([Usuario | RestoUsuarios], UsuarioAgregar, Mensaje, [Usuario | RestoNuevaUsuarios]) :-
     agregarMensajeUsuario(RestoUsuarios, UsuarioAgregar, Mensaje, RestoNuevaUsuarios).
 
-<<<<<<< HEAD
 % Caso base: si la lista esta vacia, no hay nada que hacer
-=======
-% Caso base: si la lista está vacía, no hay nada que hacer
->>>>>>> da7099cfb0b1df2ef28e3f54b94e14131f568b55
 agregarMensajeUsuario([], _, _, []).

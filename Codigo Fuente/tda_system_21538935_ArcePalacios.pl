@@ -1,13 +1,16 @@
-:- module(tda_system_21538935_ArcePalacios, [system2/9, getNameSystem/2, getInitialChatbotCodeLinkSystem/2, getChatbotsSystem/2, getChatHistorySystem/2, getRegisterUsersSystem/2, getLogUsersSystem/2,
-                                            getActualChatbotCodeLinkSystem/2, getActualFlowCodeLinkSystem/2, isEmpty/1, len/2, getChatbotIdsChatbot/2, addChatbot/3]).
+:- consult('tda_option_21538935_ArcePalacios.pl').
+:- consult('tda_flow_21538935_ArcePalacios.pl').
+:- consult('tda_chatbot_21538935_ArcePalacios.pl').
 
-:- use_module(tda_option_21538935_ArcePalacios).
-:- use_module(tda_flow_21538935_ArcePalacios).
-:- use_module(tda_chatbot_21538935_ArcePalacios).
+%---------------------------------------Constructor---------------------------------------
+%---------------------------------------RF7---------------------------------------
+% Meta Primaria: system/4
+% Metas Secundarias: addChatbot/3
+% Descripcion: Predicado que representa a un system, se encarga de verificar que los chatbots que se pongan no se repitan
+% Dominio: Name X InitialChatbotCodeLink X Chatbots X System
 
-
-%--------Constructor---------
-% Constructor system se encuentra en el Main RF7
+system(Name, InitialChatbotCodeLink, Chatbots, [Name, InitialChatbotCodeLink, ChatbotsOut, [], [], [], InitialChatbotCodeLink, -1]):-
+    addChatbot(Chatbots,[],ChatbotsOut).
 
 % Meta Primaria: system2/9
 % Metas Secundarias: -
@@ -17,7 +20,7 @@
 system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink,
         [Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink]).
 
-%-------Selectores--------
+%---------------------------------------Selectores---------------------------------------
 
 % Meta Primaria: getNameSystem/2
 % Metas Secundarias: -
@@ -72,20 +75,120 @@ getActualChatbotCodeLinkSystem([_, _, _, _, _, _, ActualChatbotCodeLink|_], Actu
 % Dominio: System X Name
 getActualFlowCodeLinkSystem([_, _, _, _, _, _, _, ActualFlowCodeLink], ActualFlowCodeLink).
 
-%---------Modificadores-------
-% systemAddChatbot se encuentra en el Main RF8
+%---------------------------------------Modificadores---------------------------------------
+%---------------------------------------RF8---------------------------------------
+% Meta Primaria: systemAddChatbot/3
+% Metas Secundarias: getChatbotIdChatbot/2, getChatbotsSystem/2, getChatbotIdsChatbot/2, member/2, getNameSystem/2, getInitialChatbotCodeLinkSystem/2,
+%                  getChatHistorySystem/2, getRegisterUsersSystem/2, getLogUsersSystem/2, getActualChatbotCodeLinkSystem/2, getActualFlowCodeLinkSystem/2, system2/9
+% Descripcion: Predicado que introduce a un sistema un chatbot siempre y cuando este no se encuentre ya en el sistema
+% Dominio: System X Chatbot X System
 
-% systemAddUser se encuentra en el Main RF9
+% Caso1: El Chatbot no esta en el sistema (Se introduce al sistema el chatbot)
+systemAddChatbot(SystemIn, Chatbot, SystemOut):-
+    getChatbotIdChatbot(Chatbot, ChatbotId),
+    getChatbotsSystem(SystemIn, Chatbots),
+    getChatbotIdsChatbot(Chatbots, ChatbotsIds),
+    \+ member(ChatbotId, ChatbotsIds),
+    getNameSystem(SystemIn, Name),
+    getInitialChatbotCodeLinkSystem(SystemIn, InitialChatbotCodeLink),
+    getChatbotsSystem(SystemIn, Chatbots),
+    getChatHistorySystem(SystemIn, ChatHistory),
+    getRegisterUsersSystem(SystemIn, RegisterUsers),
+    getLogUsersSystem(SystemIn, LogUsers),
+    getActualChatbotCodeLinkSystem(SystemIn, ActualChatbotCodeLink),
+    getActualFlowCodeLinkSystem(SystemIn, ActualFlowCodeLink),
+    system2(Name, InitialChatbotCodeLink, [Chatbot| Chatbots], ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink,
+        SystemOut).
 
-% systemLogin se encuentra en el Main RF10
+% Caso2: El chatbot ya esta en el sistema, por ende se devuelve el mismo sistema
+systemAddChatbot(SystemIn, Chatbot, SystemOut):-
+    getChatbotIdChatbot(Chatbot, ChatbotId),
+    getChatbotsSystem(SystemIn, Chatbots),
+    getChatbotIdsChatbot(Chatbots, ChatbotsIds),
+    member(ChatbotId, ChatbotsIds),
+    SystemOut = SystemIn.
+
+%---------------------------------------RF9---------------------------------------
+% Meta Primaria: systemAddUser/3
+% Metas Secundarias: getRegisterUsersSystem/2, member/2, getNameSystem/2, getInitialChatbotCodeLinkSystem/2, getChatbotsSystem/2, getChatHistorySystem/2,
+%                     getLogUsersSystem/2, getActualChatbotCodeLinkSystem/2,getActualFlowCodeLinkSystem/2, system2/9
+% Descripcion: Predicado que registra un usuario a un sistema siempre y cuando este no se encuentre previamente registrado 
+% Dominio: System X User(String) X System
+
+% Caso1: El usuario ya esta registrado
+systemAddUser(SystemIn, User, SystemOut):-
+    getRegisterUsersSystem(SystemIn, RegisterUsers),
+    member(User, RegisterUsers),
+    SystemOut = SystemIn.
+
+% Caso2: El usuario no se encuentra registrado
+systemAddUser(SystemIn, User, SystemOut):-
+    getRegisterUsersSystem(SystemIn, RegisterUsers),
+   	\+ member(User, RegisterUsers),
+    getNameSystem(SystemIn, Name),
+ 	getInitialChatbotCodeLinkSystem(SystemIn, InitialChatbotCodeLink),
+    getChatbotsSystem(SystemIn, Chatbots),
+    getChatHistorySystem(SystemIn, ChatHistory),
+    getRegisterUsersSystem(SystemIn, RegisterUsers),
+    getLogUsersSystem(SystemIn, LogUsers),
+    getActualChatbotCodeLinkSystem(SystemIn, ActualChatbotCodeLink),
+    getActualFlowCodeLinkSystem(SystemIn, ActualFlowCodeLink),
+    system2(Name, InitialChatbotCodeLink, Chatbots, [[User,[]]| ChatHistory], [User|RegisterUsers], LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink, SystemOut).
 
 
-% systemLogout se encuentra en el Main RF11
+%---------------------------------------RF10---------------------------------------
+% Meta Primaria: systemLogin/3
+% Metas Secundarias: getRegisterUsersSystem/2, member/2, getNameSystem/2, getInitialChatbotCodeLinkSystem/2, getChatbotsSystem/2, getChatHistorySystem/2, isEmpty/1
+%                     getLogUsersSystem/2, getActualChatbotCodeLinkSystem/2, getActualFlowCodeLinkSystem/2, system2/9
+% Descripcion: Predicado que Loguea un usuario a un sistema siempre y cuando este se este en la lista de usuarios registrados y no este ningun usuario logueado
+% Dominio: System X User(String) X System
+
+% Caso1: Caso ideal en el cual el usuario se encuentra registrado y no hay ningun usuario logueado
+systemLogin(SystemIn, User, SystemOut):-
+    getRegisterUsersSystem(SystemIn, RegisterUsers),
+    getLogUsersSystem(SystemIn, LogUsersSystem),
+    member(User, RegisterUsers),
+    isEmpty(LogUsersSystem),
+    getNameSystem(SystemIn, Name),
+ 	getInitialChatbotCodeLinkSystem(SystemIn, InitialChatbotCodeLink),
+    getChatbotsSystem(SystemIn, Chatbots),
+    getChatHistorySystem(SystemIn, ChatHistory),
+    getRegisterUsersSystem(SystemIn, RegisterUsers),
+    getActualChatbotCodeLinkSystem(SystemIn, ActualChatbotCodeLink),
+    getActualFlowCodeLinkSystem(SystemIn, ActualFlowCodeLink),
+    system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, [User], ActualChatbotCodeLink, ActualFlowCodeLink, SystemOut).
+
+% Caso2: Caso en el que el usuario no esta registrado, se crea el mismo sistema sin ingresar al usuario
+systemLogin(SystemIn, User, SystemOut):-
+	getRegisterUsersSystem(SystemIn, RegisterUsers),
+    \+ member(User, RegisterUsers),
+    SystemOut = SystemIn.
+
+% Caso3: Caso en el que el usuario se encuentra registrado, pero ya hay un usuario previamente logueado (se crea el mismo sistema sin loguear al usuario)
+systemLogin(SystemIn, User, SystemOut):-
+    getRegisterUsersSystem(SystemIn, RegisterUsers),
+    getLogUsersSystem(SystemIn, LogUsersSystem),
+    member(User, RegisterUsers),
+    \+ isEmpty(LogUsersSystem),
+    SystemOut = SystemIn.
 
 
+%---------------------------------------RF11---------------------------------------
+% Meta Primaria: systemLogout/2
+% Metas secundarias: getNameSystem/2, getInitialChatbotCodeLinkSystem/2, getChatbotsSystem/2, getChatHistorySystem/2, getRegisterUsersSystem, system2/9
+% Descripcion: Predicado que desloguea al usuario y devuelve a la forma original al sistema (resetea los codigos de chatbot y flujo, ademas desloguea al usuario)
+% Dominio: System X System
+
+systemLogout(SystemIn, SystemOut):-
+    getNameSystem(SystemIn, Name),
+ 	getInitialChatbotCodeLinkSystem(SystemIn, InitialChatbotCodeLink),
+    getChatbotsSystem(SystemIn, Chatbots),
+    getChatHistorySystem(SystemIn, ChatHistory),
+    getRegisterUsersSystem(SystemIn, RegisterUsers),
+    system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, [], InitialChatbotCodeLink, -1, SystemOut).
 
 
-%-------Otras funciones-----
+%---------------------------------------Otros Predicados---------------------------------------
 % Meta Primaria: len/2
 % Metas Secundarias: -
 % Descripcion: Predicado que cuenta la cantidad de elementos de un a lista

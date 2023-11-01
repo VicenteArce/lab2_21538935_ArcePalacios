@@ -1,11 +1,15 @@
-:- module(tda_flow_21538935_ArcePalacios, [flow2/4, getIdFlow/2, getNameMessageFlow/2, getOptionsFlow/2, getCodesOptions/2, addOption/3]).
+:- consult('tda_option_21538935_ArcePalacios.pl').
 
-:- use_module(tda_option_21538935_ArcePalacios).
+%---------------------------------------TDA FLOW---------------------------------------
 
-
-% ----------Constructores-----------
-
-% Constructor flow se encuentra en el Main RF3
+%---------------------------------------Constructores---------------------------------------
+%---------------------------------------RF3---------------------------------------
+% Meta Primaria: flow/4
+% Metas Secundarias: addOption/3
+% Descripcion: Predicado que representa a un flujo, se encarga de verificar que las opciones introducidas no se repitan en base al id y lo introuce a un flujo
+% Dominio: Id X NameMessage X Option X Flow
+flow(Id, NameMessage, Option, [Id, NameMessage, OptionOut]):-
+    addOption(Option, [], OptionOut).
 
 % Meta Primaria: flow2/4
 % Metas secundarias: -
@@ -13,7 +17,7 @@
 % Dominio: Id X NameMessage X Option X Flow
 flow2(Id, NameMessage, Option, [Id, NameMessage, Option]).
    
-% -----------Selectores-------------
+%---------------------------------------Selectores---------------------------------------
 
 % Meta Primaria: getIdFlow/2
 % Metas secundarias: -
@@ -33,11 +37,34 @@ getNameMessageFlow([_,NameMessage|_], NameMessage).
 % Dominio: Id X FLow
 getOptionsFlow([_,_,Options], Options).
 
-%-----------Modificadores---------
+%---------------------------------------Modificadores---------------------------------------
+%---------------------------------------RF4---------------------------------------
+% Meta Primaria: flowAddOption/3
+% Metas Secundarias: getCodeOption/2, getOptionsFlow/2, getCodesOptions/2, member/2, getNameMessageFlow/2, getIdFlow/2, flow2/4
+% Descripcion: predicado que permite introducir una opcion a un flujo sin que se repita en base a su id
+% Dominio: Flujo X Option X Flujo
 
-% flowAddOption se encuentra en el Main RF4
+%Caso1: La opcion a introducir no esta introucida en las opciones(Se basa en los codigos de las opciones al momento de comparar) 
+flowAddOption(FlowIn, Option, FlowOut):-
+    getCodeOption(Option, Code),
+    getOptionsFlow(FlowIn, Options),
+    getCodesOptions(Options, CodeOptions),
+    \+ member(Code,CodeOptions),
+    getNameMessageFlow(FlowIn, NameMessage),
+    getIdFlow(FlowIn, Id),
+    flow2(Id, NameMessage, [Option|Options], FlowOut).
 
-%-----------Otras funciones-------------
+%Caso2: El codigo de la opcion a introducir ya esta introucida en las opciones de flujo (construye el flow sin esa opcion)
+flowAddOption(FlowIn, Option, FlowOut):-
+    getCodeOption(Option, Code),
+    getOptionsFlow(FlowIn, Options),
+    getCodesOptions(Options, CodeOptions),
+    member(Code,CodeOptions),
+    getNameMessageFlow(FlowIn, NameMessage),
+    getIdFlow(FlowIn, Id),
+    flow2(Id, NameMessage, Options, FlowOut).
+
+%---------------------------------------Otros Predicados---------------------------------------
     
 % Metas Primarias: getCodesOptions/2
 % Metas Secundarias: -
