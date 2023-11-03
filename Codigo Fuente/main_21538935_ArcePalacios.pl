@@ -3,25 +3,25 @@
 :- consult('tda_chatbot_21538935_ArcePalacios.pl').
 :- consult('tda_system_21538935_ArcePalacios.pl').
 :- consult('tda_chatHistory_21538935_ArcePalacios.pl').
+:- consult('tda_user_21538935_ArcePalacios.pl').
 
 %---------------------------------------RF12---------------------------------------
 % Meta Primaria: systemTalkRec/3
 % Metas secundarias: isEmpty/1, atom_number/2, getPrimerElemento/2, recuperarElemento/3, getNameChatbot/2, getFlowsChatbot/2,getStartFlowIdChatbot/2,getNameMessageFlow/2, getOptionsFlow/2, getMessagesOptions/2, get_time/1, reverse/2,
-%                    append/3, concat_atom/2, agregarMensajeUsuario/4, getChatbotCodeLinkOption/2,getInitialFlowCodeLinkOption/2, downcase_atom/2, atom_string/2, system2/9
+%                    append/3, concat_atom/2, agregarMensajeUsuario/4, getChatbotCodeLinkOption/2,getInitialFlowCodeLinkOption/2, downcase_atom/2, atom_string/2, system2/10
 % Descripcion: Predicado que permite interactuar con el sistema, este soporta mensajes que contegan el numero de la opcion del numero o mensajes que sean parte de las palabras claves de la opciones disponibles,
 %              el sistema de salida contendra en el historial del usuario logueado, las conversaciones que se hayan tenido con el sistema.
 % Dominio: System X Message X System
 
 
-
 %Caso0: No hay ningun usuario logueado, se construye el mismo sistema ingresado, tambien reinicia el ActualChatbotCodeLink y el ActualFlowCodeLink
-systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, _, _], _, SystemOut):-
+systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, _, _, _], _, SystemOut):-
     isEmpty(LogUsers),
-    system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, InitialChatbotCodeLink, -1, SystemOut). 
+    system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, InitialChatbotCodeLink, -1, -1, SystemOut). 
     
 
 %Caso1: Hay usuario logueado y el sistema no se ha iniciado
-systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink], Message, SystemOut):-
+systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink, PlaceHolderSimulate], Message, SystemOut):-
     \+ isEmpty(LogUsers),				
     -1 =:= ActualFlowCodeLink,		
    	 getPrimerElemento(LogUsers, User),
@@ -39,13 +39,11 @@ systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUser
     append(FinalAppendAux, ["\n"], FinalAppend),
     concat_atom(FinalAppend, ConcatMessages),
     agregarMensajeUsuario(ChatHistory, User, ConcatMessages, ChatHistoryOut),
-    system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistoryOut, RegisterUsers, LogUsers, ActualChatbotCodeLink, StartFlowId, SystemOut).
+    system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistoryOut, RegisterUsers, LogUsers, ActualChatbotCodeLink, StartFlowId, PlaceHolderSimulate, SystemOut).
     
     
 %Caso2: Hay un usuario logueado, el sistema ya inicio y el mensaje es un numero
-systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink],
-              Message, 
-              SystemOut):-
+systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink, PlaceHolderSimulate], Message, SystemOut):-
     \+ isEmpty(LogUsers),
     -1 \= ActualFlowCodeLink,
     atom_number(Message, OptionNumber),
@@ -70,10 +68,10 @@ systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUser
     append(FinalAppendAux, ["\n"], FinalAppend),
     concat_atom(FinalAppend, ConcatMessages),
     agregarMensajeUsuario(ChatHistory, User, ConcatMessages, ChatHistoryOut),
-	system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistoryOut, RegisterUsers, LogUsers, ChatbotActualCode, FlowActualCode, SystemOut).
+	system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistoryOut, RegisterUsers, LogUsers, ChatbotActualCode, FlowActualCode, PlaceHolderSimulate, SystemOut).
     
 %Caso3: Hay un usuario logueado, el sistema ya inicio y el mensaje es un string
-systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink],
+systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink, PlaceHolderSimulate],
               Message, 
               SystemOut):-
     \+ isEmpty(LogUsers),
@@ -101,7 +99,7 @@ systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUser
     append(FinalAppendAux, ["\n"], FinalAppend),
     concat_atom(FinalAppend, ConcatMessages),
     agregarMensajeUsuario(ChatHistory, User, ConcatMessages, ChatHistoryOut),
-	system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistoryOut, RegisterUsers, LogUsers, ChatbotActualCode, FlowActualCode, SystemOut).
+	system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistoryOut, RegisterUsers, LogUsers, ChatbotActualCode, FlowActualCode, PlaceHolderSimulate, SystemOut).
     
     
 
@@ -135,7 +133,63 @@ systemSynthesis(System, User, String):-
     getPrimerElemento(Historial, String).
 
 
+
+
+%---------------------------------------RF14---------------------------------------
+% Meta Primaria: systemSimulate/4
+% Metas secundarias: 
+% Descripcion: Predicado que permite la simulacion de una interaccion con un sistema, es decir, se crea un usuario, se loguea, y dada una semilla se eligiran opciones pseudo-aleatorias junto con el predicado systemTalkRec
+% Dominio: System X Message X System
+
+
+%Caso base: Las maximas interacciones son menores a 0
+systemSimulate(System, MaxInteractions, _, SystemOut):-
+    MaxInteractions < 0,
+    systemLogout(System, SystemOut).
+
+% Caso en el que la simulacion no se ha iniciado
+systemSimulate(System, MaxInteractions, Seed, SystemOut):-
+    getPlaceHolderSimulateSystem(System, PlaceHolderSimulate),
+    PlaceHolderSimulate == -1,	% Si la simulacion no se ha iniciado, entonces creara al usuario user + seed
+    user("user", Seed, User),	
+    systemLogout(System, SystemAux),	% Hago un systemLogout por si ya existiese un usuario logueado
+    systemAddUser(SystemAux, User, SystemAux2),
+    systemLogin(SystemAux2, User, SystemAux3), % Logueo en el sistema al usuario nuevo
+    systemTalkRec(SystemAux3, "Hola", SystemAux4), % Se supondra que el primer mensaje en la simulacion siempre sera un "Hola"
+    setPlaceHolderSimulateSystem(SystemAux4, 1, SystemOutAux),	% Seteo el PlaceHolderSimulateSystem en 1 para que, una vez iniciada la simulacion, no pase por este caso de nuevo
+    MaxInteractionsAux is MaxInteractions - 1,			
+    myRandom(Seed, SeedOut),
+    systemSimulate(SystemOutAux, MaxInteractionsAux, SeedOut, SystemOut).	
+   
+% Caso en el que la simulacion ya inicio
+systemSimulate(System, MaxInteractions, Seed, SystemOut):-
+    getPlaceHolderSimulateSystem(System, PlaceHolderSimulate),
+    PlaceHolderSimulate == 1,	% Se comprueba que la simulacion ya se inicio
+    getNumberOptions(System, NumberOptions),	% Obtengo la cantidad de opciones que hay en el chatbot y flujo actual
+    setRandomChoose(Seed, NumberOptions, RandomChoose),
+    number_string(RandomChoose, Message),
+    systemTalkRec(System, Message, SystemOutAux),
+    MaxInteractionsAux is MaxInteractions - 1,			
+    myRandom(Seed, SeedOut),
+    systemSimulate(SystemOutAux, MaxInteractionsAux, SeedOut, SystemOut).	
+
+
 %------------------------OTROS PREDICADOS-------------------
+% NUMBER OPTIONS
+getNumberOptions([_, _, Chatbots, _, _, _, ActualChatbotCodeLink, ActualFlowCodeLink, _], NumberOptions):-
+    recuperarElemento(ActualChatbotCodeLink, Chatbots, ChatbotOut),
+    getFlowsChatbot(ChatbotOut, Flows),
+    recuperarElemento(ActualFlowCodeLink, Flows, FlowOut),
+    getOptionsFlow(FlowOut, Options),
+    len(Options, NumberOptions).
+
+%Random Chosee
+setRandomChoose(Seed, NumberOptions, NumberRandomChoose):-
+   	NumberRandomChooseAux is Seed mod NumberOptions,
+    NumberRandomChoose is NumberRandomChooseAux + 1.
+
+
+
 % Meta Primaria: myRandom/2
 % Metas Secundarias: -
 % Descripcion: Predicado que dado un numero, se puede obtener otro de manera pseudo-aleatoria
