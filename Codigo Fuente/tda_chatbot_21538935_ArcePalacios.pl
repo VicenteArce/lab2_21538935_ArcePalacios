@@ -95,6 +95,7 @@ getIdsFlows([], []).
 getIdsFlows([[PrimerElemento|_]|Resto], [PrimerElemento|ListaPrimeros]) :-
     getIdsFlows(Resto, ListaPrimeros).
 
+
 % Meta primaria: addFlow/3
 % Metas secundarias: getIdFlow/2, getIdsFlows/2, member/2
 % Descripcion: Predicado que sirve para introducir flujos a una lista acumuladora sin que los codigos se repitan

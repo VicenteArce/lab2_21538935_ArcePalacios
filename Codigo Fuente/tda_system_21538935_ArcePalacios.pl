@@ -15,7 +15,7 @@ system(Name, InitialChatbotCodeLink, Chatbots, [Name, InitialChatbotCodeLink, Ch
 % Meta Primaria: system2/10
 % Metas Secundarias: -
 % Descripcion: Predicado que representa a un system, para constuir el sistema, se requieren todos los parametros del sistema
-% Dominio: Name X InitialChatbotCodeLink X Chatbots X ChatHistory X RegisterUsers X LogUsers X ActualChatbotCodeLink X ActualFlowCodeLink X System
+% Dominio: Name X InitialChatbotCodeLink X Chatbots X ChatHistory X RegisterUsers X LogUsers X ActualChatbotCodeLink X ActualFlowCodeLink X PlaceHolderSimulate X System
 
 system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink, PlaceHolderSimulate,
         [Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink, PlaceHolderSimulate]).
@@ -79,7 +79,6 @@ getActualFlowCodeLinkSystem([_, _, _, _, _, _, _, ActualFlowCodeLink|_], ActualF
 % Metas Secundarias: -
 % Descripcion: Predicado que obtiene el PlaceHolderSimulate de un sistema
 % Dominio: System X PlaceHolderSimulate
-
 getPlaceHolderSimulateSystem([_, _, _, _, _, _, _, _, PlaceHolderSimulate], PlaceHolderSimulate).
 
 %---------------------------------------Modificadores---------------------------------------
@@ -231,6 +230,7 @@ isEmpty(L) :-
 getChatbotIdsChatbot([], []).
 getChatbotIdsChatbot([[PrimerElemento|_]|Resto], [PrimerElemento|ListaPrimeros]) :-
     getChatbotIdsChatbot(Resto, ListaPrimeros).
+
 
 
 % Meta Primaria: addChatbot/3

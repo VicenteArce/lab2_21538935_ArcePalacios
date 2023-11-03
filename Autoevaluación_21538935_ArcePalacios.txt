@@ -1,0 +1,15 @@
+Nombre-archivo	      	      Predicados		Autoevaluación
+--------------			TDAs			      1
+tda_option  		       option                         1
+tda_fLow		        flow			      1
+tda_flow		    flowAddOption		      1
+tda_chatbot		      chatbot			      1
+tda_chatbot		   chatbotAddFlow	              1
+tda_system		       system			      1
+tda_system		  systemAddChatbot	              1
+tda_system		    systemAddUser		      1
+tda_system		    systemLogin 		      1
+tda_system	            systemLogout		      1
+main			   systemTalkRec		      1
+main			   systemSynthesis	              1
+main			   systemSimulate		      1

@@ -74,6 +74,8 @@ getCodesOptions([], []).
 getCodesOptions([[PrimerElemento|_]|Resto], [PrimerElemento|ListaPrimeros]) :-
     getCodesOptions(Resto, ListaPrimeros).
 
+
+
 % Meta primaria: addOption/3
 % Metas secundarias: getCodeOption/2, getCodesOptions/2, member/2
 % Descripcion: Predicado que sirve para introducir opciones a una lista acumuladora sin que los codigos se repitan

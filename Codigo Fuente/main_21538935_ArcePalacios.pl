@@ -174,8 +174,11 @@ systemSimulate(System, MaxInteractions, Seed, SystemOut):-
     systemSimulate(SystemOutAux, MaxInteractionsAux, SeedOut, SystemOut).	
 
 
-%------------------------OTROS PREDICADOS-------------------
-% NUMBER OPTIONS
+%---------------------------------------OTROS PREDICADOS---------------------------------------
+% Meta Primaria: getNumberOptions/2
+% Metas Secundarias:recuperarElemento/3, getFlowsChatbot/2, recuperarElemento/3, getOptionsFlow/2, len/2
+% Descripcion: Predicado permite obtener la cantidad de opciones que hay en el chatbot y flujo actual en el que se encuentra el sistema
+% Dominio: System X NumberOptions(Integer)
 getNumberOptions([_, _, Chatbots, _, _, _, ActualChatbotCodeLink, ActualFlowCodeLink, _], NumberOptions):-
     recuperarElemento(ActualChatbotCodeLink, Chatbots, ChatbotOut),
     getFlowsChatbot(ChatbotOut, Flows),
@@ -183,11 +186,14 @@ getNumberOptions([_, _, Chatbots, _, _, _, ActualChatbotCodeLink, ActualFlowCode
     getOptionsFlow(FlowOut, Options),
     len(Options, NumberOptions).
 
-%Random Chosee
+
+% Meta Primaria: setRandomChoose/3
+% Metas Secundarias: -
+% Descripcion: Predicado que permite obtener un numero de una opcion de manera pseudo-aleatoria, este numero ira entre 1 y n, siendo n el NumberOptions, se supondra que las opciones son consecutivas.
+% Dominio: System X NumberOptions(Integer)
 setRandomChoose(Seed, NumberOptions, NumberRandomChoose):-
    	NumberRandomChooseAux is Seed mod NumberOptions,
     NumberRandomChoose is NumberRandomChooseAux + 1.
-
 
 
 % Meta Primaria: myRandom/2
@@ -212,7 +218,6 @@ getPrimerElemento([E|_],E).
 % Descripcion: Predicado que permite obtener un Elemento de una lista relacionado a un string, es decir, si en una lista hay un elemento que contiene el mensaje "Hola", con este predicado se puede obtener todo el elemento que tiene el mensaje "Hola"
 % Dominio: Mensaje X Lista X Lista
 
-
 recuperarElementoPorString(Mensaje, [[C, M, CB, Init, Keywords]|_], [C, M, CB, Init, Keywords]):-
     member(Mensaje, Keywords).
 recuperarElementoPorString(Mensaje,[_|Resto], ElementoRecuperado):-
@@ -224,7 +229,6 @@ recuperarElementoPorString(Mensaje,[_|Resto], ElementoRecuperado):-
 % Metas secundarias: -
 % Descripcion: Predicado que permite recuperar una lista si contiene un elemento en su primera posicion
 % Dominio: Elemento X Lista X Lista
-
 recuperarElemento(Elemento, [[Elemento|Resto]|_], [Elemento|Resto]) :- !.
 recuperarElemento(Elemento, [_|Resto], ElementoRecuperado) :-
     recuperarElemento(Elemento, Resto, ElementoRecuperado).

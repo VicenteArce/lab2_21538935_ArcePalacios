@@ -46,6 +46,10 @@ getKeywordOption([_,_,_,_,Keyword], Keyword).
 
 
 %---------------------------------------Otros Predicados---------------------------------------
+% Meta Primaria: downcaseKeywords/3
+% Metas Secundarias: downcase_atom/2, atom_string/2
+% Descripcion: Predicado que dado una lista de string, lo convierte a minusculas y los pone en una lista
+% Dominio: Lista(contiene strings que son Keywords) X Lista(Acumulador) X Lista(Keywords ya convertidos a minusculas)
 downcaseKeywords([], Acc, Acc).
 downcaseKeywords([H|T], Acc, NextAcc):-
     downcase_atom(H, Hatom),
