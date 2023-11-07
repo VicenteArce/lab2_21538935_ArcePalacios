@@ -115,7 +115,10 @@ systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUser
 systemSynthesis(System, User, String):-
     getRegisterUsersSystem(System, RegisterUsers),
     \+ member(User, RegisterUsers),
-    String = "Tu usuario no esta registrado".
+    StringAux = "Tu usuario no esta registrado",
+    append(["\n-----------------", User, "-----------------\n"], [StringAux], ListaAux),
+    concat_atom(ListaAux, Atom_String),
+    atom_string(Atom_String, String).
 
 %Caso2: El usuario no ha interactuado con el sistema
 systemSynthesis(System, User, String):-
@@ -123,14 +126,20 @@ systemSynthesis(System, User, String):-
     recuperarElemento(User, CH, HistorialUser),
     getHistorialCH(HistorialUser, Historial),
     isEmpty(Historial),
-    String = "Tu usuario no ha interactuado con el sistema aun".
+    StringAux = "Tu usuario no ha interactuado con el sistema aun",
+    append(["\n-----------------", User, "-----------------\n"], [StringAux], ListaAux),
+    concat_atom(ListaAux, Atom_String),
+    atom_string(Atom_String, String).
     
 %Caso3: El usuario dado si tiene un historial
 systemSynthesis(System, User, String):-
     getChatHistorySystem(System, CH),
     recuperarElemento(User, CH, HistorialUser),
     getHistorialCH(HistorialUser, Historial),
-    getPrimerElemento(Historial, String).
+    append(["\n-----------------", User, "-----------------\n"], Historial, ListaAux),
+    concat_atom(ListaAux, Atom_String),
+    atom_string(Atom_String, String).
+
 
 
 

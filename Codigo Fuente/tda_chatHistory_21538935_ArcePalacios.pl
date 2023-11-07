@@ -7,6 +7,9 @@
 % Dominio: User (String) X Historial(Lista vacia o con elementos) X ChatHistory
 chatHistory(User, Historial, [User, Historial]).
 
+
+%---------------------------------------Selectores---------------------------------------
+
 % Meta Primaria: getUserCH/2
 % Metas Secundarias: -
 % Descripcion: Predicado que permite obtener el usuario de un ChatHistory
