@@ -99,7 +99,7 @@ setPlaceHolderSimulateSystem([Name, InitialChatbotCodeLink, Chatbots, ChatHistor
 % Descripcion: Predicado que introduce a un sistema un chatbot siempre y cuando este no se encuentre ya en el sistema
 % Dominio: System X Chatbot X System
 
-% Caso1: El Chatbot no esta en el sistema (Se introduce al sistema el chatbot)
+% Si el Chatbot (Comparando por id) no esta en el sistema, se introduce al sistema el chatbot, de lo contrariose arrojara false
 systemAddChatbot(SystemIn, Chatbot, SystemOut):-
     getChatbotIdChatbot(Chatbot, ChatbotId),
     getChatbotsSystem(SystemIn, Chatbots),
@@ -116,13 +116,6 @@ systemAddChatbot(SystemIn, Chatbot, SystemOut):-
     getPlaceHolderSimulateSystem(SystemIn, PlaceHolderSimulate),
     system2(Name, InitialChatbotCodeLink, [Chatbot| Chatbots], ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink, PlaceHolderSimulate, SystemOut).
 
-% Caso2: El chatbot ya esta en el sistema, por ende se devuelve el mismo sistema
-systemAddChatbot(SystemIn, Chatbot, SystemOut):-
-    getChatbotIdChatbot(Chatbot, ChatbotId),
-    getChatbotsSystem(SystemIn, Chatbots),
-    getChatbotIdsChatbot(Chatbots, ChatbotsIds),
-    member(ChatbotId, ChatbotsIds),
-    SystemOut = SystemIn.
 
 %---------------------------------------RF9---------------------------------------
 % Meta Primaria: systemAddUser/3
@@ -131,13 +124,8 @@ systemAddChatbot(SystemIn, Chatbot, SystemOut):-
 % Descripcion: Predicado que registra un usuario a un sistema siempre y cuando este no se encuentre previamente registrado 
 % Dominio: System X User(String) X System
 
-% Caso1: El usuario ya esta registrado
-systemAddUser(SystemIn, User, SystemOut):-
-    getRegisterUsersSystem(SystemIn, RegisterUsers),
-    member(User, RegisterUsers),
-    SystemOut = SystemIn.
 
-% Caso2: El usuario no se encuentra registrado
+% Si el usuario no se encuentra registrado, entonces lo agrega a la lista de usuarios. De lo contrario, si se intenta introducir un usuario que ya se encuentra en la lista de usuarios, arrojara false
 systemAddUser(SystemIn, User, SystemOut):-
     getRegisterUsersSystem(SystemIn, RegisterUsers),
    	\+ member(User, RegisterUsers),
@@ -160,7 +148,8 @@ systemAddUser(SystemIn, User, SystemOut):-
 % Descripcion: Predicado que Loguea un usuario a un sistema siempre y cuando este se este en la lista de usuarios registrados y no este ningun usuario logueado
 % Dominio: System X User(String) X System
 
-% Caso1: Caso ideal en el cual el usuario se encuentra registrado y no hay ningun usuario logueado
+% En el caso ideal en el cual el usuario se encuentra registrado y no hay ningun usuario logueado, simplemente lo introduce a la lista de usuarios logueados.
+% En el caso en el cual el usuario no se encuentra registrado, arrojara false. Si ya hay algun usuario logueado, se arrojara false
 systemLogin(SystemIn, User, SystemOut):-
     getRegisterUsersSystem(SystemIn, RegisterUsers),
     getLogUsersSystem(SystemIn, LogUsersSystem),
@@ -176,19 +165,6 @@ systemLogin(SystemIn, User, SystemOut):-
     getPlaceHolderSimulateSystem(SystemIn, PlaceHolderSimulate),
     system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, [User], ActualChatbotCodeLink, ActualFlowCodeLink, PlaceHolderSimulate, SystemOut).
 
-% Caso2: Caso en el que el usuario no esta registrado, se crea el mismo sistema sin ingresar al usuario
-systemLogin(SystemIn, User, SystemOut):-
-	getRegisterUsersSystem(SystemIn, RegisterUsers),
-    \+ member(User, RegisterUsers),
-    SystemOut = SystemIn.
-
-% Caso3: Caso en el que el usuario se encuentra registrado, pero ya hay un usuario previamente logueado (se crea el mismo sistema sin loguear al usuario)
-systemLogin(SystemIn, User, SystemOut):-
-    getRegisterUsersSystem(SystemIn, RegisterUsers),
-    getLogUsersSystem(SystemIn, LogUsersSystem),
-    member(User, RegisterUsers),
-    \+ isEmpty(LogUsersSystem),
-    SystemOut = SystemIn.
 
 
 %---------------------------------------RF11---------------------------------------
@@ -198,6 +174,8 @@ systemLogin(SystemIn, User, SystemOut):-
 % Dominio: System X System
 
 systemLogout(SystemIn, SystemOut):-
+    getLogUsersSystem(SystemIn, LogUsers),
+    \+ isEmpty(LogUsers),
     getNameSystem(SystemIn, Name),
  	getInitialChatbotCodeLinkSystem(SystemIn, InitialChatbotCodeLink),
     getChatbotsSystem(SystemIn, Chatbots),
@@ -248,10 +226,4 @@ addChatbot([Chatbot|Chatbots], Acc, AccOut):-
     \+ member(ChatbotId, ListaChatbotIds),
     addChatbot(Chatbots, [Chatbot|Acc], AccOut).
 
-% Caso3: Si el ChatbotId del primer chatbot de la lista esta en la lista de Ids de chatbots del acumulador, entonces se vuelve a consultar al predicado, avanzando con la cola de la primera lista y sin unir al acumulador el primer chatbot
-addChatbot([Chatbot|Chatbots], Acc, AccOut):-
-    getChatbotIdChatbot(Chatbot, ChatbotId),
-    getChatbotIdsChatbot(Acc, ListaChatbotIds),
-    member(ChatbotId, ListaChatbotIds),
-    addChatbot(Chatbots, Acc, AccOut).
 

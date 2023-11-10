@@ -59,8 +59,9 @@ getFlowsChatbot([_,_,_,_,Flows], Flows).
 %					 getStartFlowIdChatbot/2, getFlowsChatbot/2, chatbot2/2
 % Descripcion: Predicado que permite consultar los Flows de un chatbot
 % Dominio: Chatbot X FLow X Chatbot
+% Recursivo por appendFinal
 
-% Caso 1: Si el id del flow no es parte de ningun flow ya agregado, entonces agrega el flow al chatbot
+% Si el id del flow no es parte de ningun flow ya agregado, entonces agrega el flow al chatbot, de lo contario arrojara false
 chatbotAddFlow(ChatbotIn, Flow, ChatbotOut):-
     getIdFlow(Flow, FlowId),
     getFlowsChatbot(ChatbotIn, Flows),
@@ -70,21 +71,10 @@ chatbotAddFlow(ChatbotIn, Flow, ChatbotOut):-
     getNameChatbot(ChatbotIn, NameOut),
     getWelcomeMessageChatbot(ChatbotIn, WelcomeMessageOut),
     getStartFlowIdChatbot(ChatbotIn, StartFlowIdOut),
-    getFlowsChatbot(ChatbotIn, FlowsOut),
-    chatbot2(ChatbotIdOut, NameOut, WelcomeMessageOut, StartFlowIdOut, [Flow|FlowsOut], ChatbotOut).
-
-%Caso 2: Si el id del flow es parte de ningun flow ya agregado, entonces no lo agrega al flow del chatbot
-chatbotAddFlow(ChatbotIn, Flow, ChatbotOut):-
-    getIdFlow(Flow, FlowId),
-    getFlowsChatbot(ChatbotIn, Flows),
-    getIdsFlows(Flows, IdsFlows),
-    member(FlowId, IdsFlows),
-    getChatbotIdChatbot(ChatbotIn, ChatbotIdOut),
-    getNameChatbot(ChatbotIn, NameOut),
-    getWelcomeMessageChatbot(ChatbotIn, WelcomeMessageOut),
-    getStartFlowIdChatbot(ChatbotIn, StartFlowIdOut),
-    getFlowsChatbot(ChatbotIn, FlowsOut),
+    getFlowsChatbot(ChatbotIn, FlowsAux),
+    appendFinal(Flow, FlowsAux, FlowsOut),
     chatbot2(ChatbotIdOut, NameOut, WelcomeMessageOut, StartFlowIdOut, FlowsOut, ChatbotOut).
+
 
 %---------------------------------------Otros Predicados---------------------------------------
 % Metas Primarias: getIdsFlows/2
@@ -111,9 +101,11 @@ addFlow([Flow|Flows], Acc, AccOut):-
     \+ member(Id, ListaIds),
     addFlow(Flows, [Flow|Acc], AccOut).
 
-% Caso 2: El id del flujo se encuentra en los id de los flujos ya agregados, por ende no se agrega el flow a Acc
-addFlow([Flow|Flows], Acc, AccOut):-
-    getIdFlow(Flow, Id),
-    getIdsFlows(Acc, ListaIds),
-    member(Id, ListaIds),
-    addFlow(Flows, Acc, AccOut).
+
+% Meta primaria: appendFinal/3
+% Metas secundarias: -
+% Descripcion: Predicado que sirve para introducir un flujo a una lista de manera recursiva al final de la misma
+% Dominio: Elemento X Lista X Lista
+appendFinal(Elem, [], [Elem]).
+appendFinal(Elem, [Cabecera|Cola], [Cabecera|NuevaCola]) :-
+    appendFinal(Elem, Cola, NuevaCola).

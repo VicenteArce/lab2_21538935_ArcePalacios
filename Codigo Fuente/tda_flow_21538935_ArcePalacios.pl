@@ -44,7 +44,7 @@ getOptionsFlow([_,_,Options], Options).
 % Descripcion: predicado que permite introducir una opcion a un flujo sin que se repita en base a su id
 % Dominio: Flujo X Option X Flujo
 
-%Caso1: La opcion a introducir no esta introucida en las opciones(Se basa en los codigos de las opciones al momento de comparar) 
+% La opcion a introducir no esta introucida en las opciones, de lo contrario arrojara false (Se basa en los codigos de las opciones al momento de comparar) 
 flowAddOption(FlowIn, Option, FlowOut):-
     getCodeOption(Option, Code),
     getOptionsFlow(FlowIn, Options),
@@ -53,16 +53,6 @@ flowAddOption(FlowIn, Option, FlowOut):-
     getNameMessageFlow(FlowIn, NameMessage),
     getIdFlow(FlowIn, Id),
     flow2(Id, NameMessage, [Option|Options], FlowOut).
-
-%Caso2: El codigo de la opcion a introducir ya esta introucida en las opciones de flujo (construye el flow sin esa opcion)
-flowAddOption(FlowIn, Option, FlowOut):-
-    getCodeOption(Option, Code),
-    getOptionsFlow(FlowIn, Options),
-    getCodesOptions(Options, CodeOptions),
-    member(Code,CodeOptions),
-    getNameMessageFlow(FlowIn, NameMessage),
-    getIdFlow(FlowIn, Id),
-    flow2(Id, NameMessage, Options, FlowOut).
 
 %---------------------------------------Otros Predicados---------------------------------------
     
@@ -92,10 +82,3 @@ addOption([Option|Options], Acc, AccOut):-
   	\+ member(Code, ListaCodigosAcc),
     addOption(Options, [Option|Acc], AccOut).
 
-%Caso 2: el elemento codigo de la opcion pertenece a la lista de codigos de opciones acumuladas
-% 		por ende no lo agrega y llama nuevamente a addOption/3 pero sin "modificar" la lista de Acc.
-addOption([Option|Options], Acc, AccOut):-
-    getCodeOption(Option, Code),
-	getCodesOptions(Acc, ListaCodigosAcc),
-  	member(Code, ListaCodigosAcc),
-    addOption(Options, Acc, AccOut).

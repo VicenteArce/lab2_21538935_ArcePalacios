@@ -156,7 +156,7 @@ systemSimulate(System, MaxInteractions, _, SystemOut):-
     MaxInteractions < 0,
     systemLogout(System, SystemOut).
 
-% Caso en el que la simulacion no se ha iniciado
+% Caso en el que la simulacion no se ha iniciado y hay un usuario logueado
 systemSimulate(System, MaxInteractions, Seed, SystemOut):-
     getPlaceHolderSimulateSystem(System, PlaceHolderSimulate),
     PlaceHolderSimulate == -1,	% Si la simulacion no se ha iniciado, entonces creara al usuario user + seed
@@ -170,6 +170,19 @@ systemSimulate(System, MaxInteractions, Seed, SystemOut):-
     myRandom(Seed, SeedOut),
     systemSimulate(SystemOutAux, MaxInteractionsAux, SeedOut, SystemOut).	
    
+% Caso en el que la simulacion no se ha iniciado y no hay un usuario logueado
+systemSimulate(System, MaxInteractions, Seed, SystemOut):-
+    getPlaceHolderSimulateSystem(System, PlaceHolderSimulate),
+    PlaceHolderSimulate == -1,	% Si la simulacion no se ha iniciado, entonces creara al usuario user + seed
+    user("user", Seed, User),	
+    systemAddUser(System, User, SystemAux2),
+    systemLogin(SystemAux2, User, SystemAux3), % Logueo en el sistema al usuario nuevo
+    systemTalkRec(SystemAux3, "Hola", SystemAux4), % Se supondra que el primer mensaje en la simulacion siempre sera un "Hola"
+    setPlaceHolderSimulateSystem(SystemAux4, 1, SystemOutAux),	% Seteo el PlaceHolderSimulateSystem en 1 para que, una vez iniciada la simulacion, no pase por este caso de nuevo
+    MaxInteractionsAux is MaxInteractions - 1,			
+    myRandom(Seed, SeedOut),
+    systemSimulate(SystemOutAux, MaxInteractionsAux, SeedOut, SystemOut).	
+
 % Caso en el que la simulacion ya inicio
 systemSimulate(System, MaxInteractions, Seed, SystemOut):-
     getPlaceHolderSimulateSystem(System, PlaceHolderSimulate),
