@@ -6,7 +6,7 @@
 %---------------------------------------RF3---------------------------------------
 % Meta Primaria: flow/4
 % Metas Secundarias: addOption/3
-% Descripcion: Predicado que representa a un flujo, se encarga de verificar que las opciones introducidas no se repitan en base al id y lo introuce a un flujo
+% Descripcion: Predicado que representa a un flujo, se encarga de verificar que las opciones introducidas no se repitan en base al id y lo introuce a un flujo. En caso de que se quieran introducir opciones repetidas, retornara false
 % Dominio: Id X NameMessage X Option X Flow
 flow(Id, NameMessage, Option, [Id, NameMessage, OptionOut]):-
     addOption(Option, [], OptionOut).
@@ -41,7 +41,7 @@ getOptionsFlow([_,_,Options], Options).
 %---------------------------------------RF4---------------------------------------
 % Meta Primaria: flowAddOption/3
 % Metas Secundarias: getCodeOption/2, getOptionsFlow/2, getCodesOptions/2, member/2, getNameMessageFlow/2, getIdFlow/2, flow2/4
-% Descripcion: predicado que permite introducir una opcion a un flujo sin que se repita en base a su id
+% Descripcion: predicado que permite introducir una opcion a un flujo sin que se repita en base a su id. En caso de que la opcion que se quiere ingresar ya este en el flujo, devuelve false
 % Dominio: Flujo X Option X Flujo
 
 % La opcion a introducir no esta introucida en las opciones, de lo contrario arrojara false (Se basa en los codigos de las opciones al momento de comparar) 
@@ -68,7 +68,7 @@ getCodesOptions([[PrimerElemento|_]|Resto], [PrimerElemento|ListaPrimeros]) :-
 
 % Meta primaria: addOption/3
 % Metas secundarias: getCodeOption/2, getCodesOptions/2, member/2
-% Descripcion: Predicado que sirve para introducir opciones a una lista acumuladora sin que los codigos se repitan
+% Descripcion: Predicado que sirve para introducir opciones a una lista acumuladora sin que los codigos se repitan. En el caso de que los codigos de las opciones se repitan, retorna false
 % Dominio: Lista X Lista X Lista
 
 %Caso Base: Al no haber opciones, la consulta entrega la lista de opciones acumuladas

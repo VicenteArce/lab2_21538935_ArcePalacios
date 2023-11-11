@@ -171,8 +171,14 @@ write(String3),
 % se hace una simulacion de 5 interacciones del usuario 3826523
 systemSimulate(S11, 5, 3826523, S12),
 
+% se hace una simulacion de 3 interacciones del usuario 36
+systemSimulate(S12, 3, 36, S13),
+
+% se hace una simulacion de 6 interacciones del usuario 7
+systemSimulate(S13, 6, 7, S14),
+
 % Se imprime el historial del usuario 3826523
-systemSynthesis(S12, "user3826523", String4),
+systemSynthesis(S14, "user3826523", String4),
 write(String4).
 
 

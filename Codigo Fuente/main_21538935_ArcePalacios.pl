@@ -13,13 +13,7 @@
 %              el sistema de salida contendra en el historial del usuario logueado, las conversaciones que se hayan tenido con el sistema.
 % Dominio: System X Message X System
 
-
-%Caso0: No hay ningun usuario logueado, se construye el mismo sistema ingresado, tambien reinicia el ActualChatbotCodeLink y el ActualFlowCodeLink
-systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, _, _, _], _, SystemOut):-
-    isEmpty(LogUsers),
-    system2(Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, InitialChatbotCodeLink, -1, -1, SystemOut). 
     
-
 %Caso1: Hay usuario logueado y el sistema no se ha iniciado
 systemTalkRec([Name, InitialChatbotCodeLink, Chatbots, ChatHistory, RegisterUsers, LogUsers, ActualChatbotCodeLink, ActualFlowCodeLink, PlaceHolderSimulate], Message, SystemOut):-
     \+ isEmpty(LogUsers),				
@@ -146,7 +140,7 @@ systemSynthesis(System, User, String):-
 
 %---------------------------------------RF14---------------------------------------
 % Meta Primaria: systemSimulate/4
-% Metas secundarias: 
+% Metas secundarias: systemLogout/2, getPlaceHolderSimulateSystem/2, user/3, systemLogout/2, systemAddUser/3, systemLogin/3, systemTalkRec/3, setPlaceHolderSimulateSystem/3, myRandom/2,getNumberOptions/2, setRandomChoose/3, number_string/2,
 % Descripcion: Predicado que permite la simulacion de una interaccion con un sistema, es decir, se crea un usuario, se loguea, y dada una semilla se eligiran opciones pseudo-aleatorias junto con el predicado systemTalkRec
 % Dominio: System X Message X System
 

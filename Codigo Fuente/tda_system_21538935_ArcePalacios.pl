@@ -6,7 +6,7 @@
 %---------------------------------------RF7---------------------------------------
 % Meta Primaria: system/4
 % Metas Secundarias: addChatbot/3
-% Descripcion: Predicado que representa a un system, se encarga de verificar que los chatbots que se pongan no se repitan
+% Descripcion: Predicado que representa a un system, se encarga de verificar que los chatbots que se pongan no se repitan. Si los chatbots se repiten, devuelve false
 % Dominio: Name X InitialChatbotCodeLink X Chatbots X System
 
 system(Name, InitialChatbotCodeLink, Chatbots, [Name, InitialChatbotCodeLink, ChatbotsOut, [], [], [], InitialChatbotCodeLink, -1, -1]):-

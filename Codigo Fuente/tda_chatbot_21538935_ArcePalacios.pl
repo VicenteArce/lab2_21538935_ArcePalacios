@@ -57,9 +57,9 @@ getFlowsChatbot([_,_,_,_,Flows], Flows).
 % Meta Primaria: chatbotAddFlow/2
 % Metas secundarias: getIdFlow/2, getFlowsChatbot/2, getIdsFlows/2, member/2, getChatbotIdChatbot/2, getNameChatbot/2, getWelcomeMessageChatbot/2
 %					 getStartFlowIdChatbot/2, getFlowsChatbot/2, chatbot2/2
-% Descripcion: Predicado que permite consultar los Flows de un chatbot
+% Descripcion: Predicado que permite ingresar un flujo a un chatbot solo si el id de este no se encuentra en la lista de flujos del chatbot. Si ya estaba en el chatbot el flujo, entonces devuelve false
 % Dominio: Chatbot X FLow X Chatbot
-% Recursivo por appendFinal
+% Recursivo por predicado appendFinal
 
 % Si el id del flow no es parte de ningun flow ya agregado, entonces agrega el flow al chatbot, de lo contario arrojara false
 chatbotAddFlow(ChatbotIn, Flow, ChatbotOut):-
