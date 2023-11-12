@@ -62,12 +62,14 @@ flow(2, "Flujo 2 Chatbot 2\n¿Cuál es tu rapero favorito?", [OP16, OP17, OP18, 
 flow(3, "Flujo 3 Chatbot 2\n¿Cuál es tu artista de Jazz favorito?", [OP20], F70),
 
 %------------------------------flowAddOption--------------------------------
-% flowAddOption(F70 , OP20, F71) % Si se descomenta da false, ya que se esta intentando introducir una opcion que ya esta en el flujo
+% flowAddOption(F70 , OP20, F71), % Si se descomenta da false, ya que se esta intentando introducir una opcion que ya esta en el flujo
 
 % poniendo OP21 en F70
 flowAddOption(F70 , OP21, F72),
+
 % poniendo OP22 en F72
 flowAddOption(F72, OP22, F73),
+
 % poniendo OP23 en F73
 flowAddOption(F73, OP23, F7),
 
@@ -96,7 +98,7 @@ chatbotAddFlow(CB100, F6, CB102),
 chatbotAddFlow(CB102, F7, CB2),
 
 %------------------------system-------------------------------
-% system("Sistema de ejemplo1", 100, [CB0, CB1, CB0, CB2, CB0, CB2, CB1], S101), %Si se descomenta se retorna false, puesto a que hay mas de una ocurrencia de CB0, CB1, CB2
+% system("Sistema de ejemplo1", 100, [CB0, CB1, CB0, CB2, CB0, CB2, CB1], S101), %Si se descomenta se arroja false, puesto a que hay mas de una ocurrencia de CB0, CB1, CB2
 
 % Creando sistema de ejemplo2
 system("Sistema de ejemplo2",100, [], S100),
@@ -106,7 +108,7 @@ system("Sistema de ejemplo2",100, [], S100),
 system("Chatbots Paradigmas", 0 , [CB0], S0),
 
 %----------------------systemAddChatbot-----------------------
-% systemAddChatbot(S0, CB0, S101), % Si se descomenta retorna false
+% systemAddChatbot(S0, CB0, S101), % Si se descomenta devuelve false
 
 % poniendo CB1 en CB1
 systemAddChatbot(S0, CB1, S1),
@@ -122,30 +124,30 @@ systemAddUser(S2, "user1", S3),
 systemAddUser(S3, "user2", S4),
 
 
-% systemAddUser(S4, "user2", S101), % Si se descomenta retorna false puesto a que el usuario ya esta registrado
+% systemAddUser(S4, "user2", S101), % Si se descomenta arroja false puesto a que el usuario ya esta registrado
 
 %Añadiendo user3
 systemAddUser(S4, "user3", S5),
 
 %--------------------systemLogin---------------------
 
-% systemLogin(S5, "user4", S101), % si se descomenta retorna false ya que no esta registrado
+% systemLogin(S5, "user4", S101), % si se descomenta arroja false ya que no esta registrado
 
 % Logueando user2
 systemLogin(S5, "user2", S6),
 
-% systemLogin(S6, "user1", S101), % Si se descomenta retorna false ya que ya hay un usuario logueado
+% systemLogin(S6, "user1", S101), % Si se descomenta arroja false ya que ya hay un usuario logueado
 
 %--------------------systemLogout---------------------
 % Se desloguea
 systemLogout(S6, S7),
 
-% systemLogout(S7, S101), % si se descomenta retorna false ya que no hay ningun usuario logueado
-% systemLogout(S7, S102), % si se descomenta retorna false ya que no hay ningun usuario logueado
+% systemLogout(S7, S101), % si se descomenta arroja false ya que no hay ningun usuario logueado
+% systemLogout(S7, S102), % si se descomenta arroja false ya que no hay ningun usuario logueado
 
 %--------------------systemTalkRec---------------------
 
-% systemTalkRec(S7, "Hola", S101), % si se descomenta retorna false puesto que no hay usuario logueado
+% systemTalkRec(S7, "Hola", S101), % si se descomenta arroja false puesto que no hay usuario logueado
 
 %Logueo a un usuario para poder probar los demas casos 
 systemLogin(S7, "user2", S8),
