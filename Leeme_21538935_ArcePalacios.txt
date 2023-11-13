@@ -1,1 +1,2 @@
 Para la ejecución de este programa, basta clonar el repositorio, abrir SWI-Prolog en su versión 9.0.4, consultar el archivo main que se encuentra en la carpeta codigo fuente, para luego copiar y pegar la consulta que se puede encontrar en el archivo pruebas, para comprobar los casos en los que el programa debe arrojar false, se deben descomentar algunas lineas que se encuentran indicadas.
+IMPORTANTE: Debe asegurarse que todos los archivos del codigo fuente permanezcan ahi al momento de ejecutarse la consulta.
